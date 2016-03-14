@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source geowave-env.sh
 export HADOOP_VERSION=2.6.0
 export GEOTOOLS_VERSION=14.2
 export GEOSERVER_VERSION=2.8.2
@@ -19,6 +19,7 @@ mvn package -P accumulo-container-singlejar -Dhadoop.version=${HADOOP_VERSION} -
 ## put geowave jars in appropriate locations
 hadoop fs -mkdir -p /accumulo/classpath/geowave
 hadoop fs -copyFromLocal ./target/geowave-deploy-0.9.0-accumulo-singlejar.jar /accumulo/classpath/geowave
+cp ${STAGING_DIR}/geowave/deploy/target/geowave-deploy-0.9.0-geoserver-singlejar.jar ${GEOSERVER_HOME}/webapps/geoserver/WEB-INF/lib/geowave-geoserver.jar
 
 ## configure accumulo
 cat <<EOF | accumulo shell -u root -p secret -e "createuser geowave"
