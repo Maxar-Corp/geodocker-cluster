@@ -3,7 +3,10 @@ source geowave-env.sh
 export HADOOP_VERSION=2.6.0
 export GEOTOOLS_VERSION=14.2
 export GEOSERVER_VERSION=2.8.2
-
+apt-get purge maven maven2
+add-apt-repository ppa:andrei-pozolotin/maven3
+apt-get update
+apt-get install maven3
 rm -rf ./geowave
 git clone --branch v0.9.0 --depth 1 https://github.com/ngageoint/geowave.git
 cd ./geowave
