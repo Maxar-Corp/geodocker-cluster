@@ -1,17 +1,12 @@
 #!/bin/bash
-
-export HADOOP_VERSION=2.6.0
-export GEOTOOLS_VERSION=14.2
-export GEOSERVER_VERSION=2.8.2
-
-docker exec -it master1 bash -c ". ~/.bashrc && rm -rf ./geowave && git clone https://github.com/ngageoint/geowave.git && cd ./geowave && \
-                                 git checkout v0.9.0 && \
-                                 mvn clean install -Dmaven.test.skip=true -Dhadoop.version=${HADOOP_VERSION} -Dgeotools.version=${GEOTOOLS_VERSION} -Dgeoserver.version=${GEOSERVER_VERSION} && \
-                                 mvn install -Dmaven.test.skip=true -Dhadoop.version=${HADOOP_VERSION} -Dgeotools.version=${GEOTOOLS_VERSION} -Dgeoserver.version=${GEOSERVER_VERSION} && \
-                                 mvn package -P geowave-tools-singlejar -Dmaven.test.skip=true -Dhadoop.version=${HADOOP_VERSION} -Dgeotools.version=${GEOTOOLS_VERSION} -Dgeoserver.version=${GEOSERVER_VERSION} && \
-                                 mvn package -P accumulo-container-singlejar -Dmaven.test.skip=true -Dhadoop.version=${HADOOP_VERSION} -Dgeotools.version=${GEOTOOLS_VERSION} -Dgeoserver.version=${GEOSERVER_VERSION} && \
-                                 hadoop fs -mkdir -p /accumulo/system-classpath && \
-                                 hadoop fs -copyFromLocal deploy/target/geowave-deploy-0.9.0-accumulo-singlejar.jar /accumulo/system-classpath/ && \
-                                 accumulo shell -u root -p secret -e \"createuser geowave\" && \
-                                 accumulo shell -u root -p secret -e \"createnamespace geowave\" && \
-                                 accumulo shell -u root -p secret -e \"grant NameSpace.CREATE_TABLE -ns geowave -u geowave\""
+echo "Installing GeoWave from source..."
+docker cp ./support/geowave-install.sh master1:/data/geowave-install.sh
+docker cp ./support/ingest-and-kde-gdelt.sh master1:/data/ingest-and-kde-gdelt.sh
+docker cp ./support/setup-geowave.sh master1:/data/setup-geowave.sh
+docker exec -it master1 bash -c ". ~/.bashrc;cd /data;/data/setup-geowave.sh"
+echo "Installing GeoServer..."
+cd ../geoserver;./install.sh;cd ../geowave
+echo "Setting up GeoWave workspace on GeoServer..."
+docker cp ./support/geoserver-geowave-workspace.tar master1:/data/geoserver-geowave-workspace.tar
+docker cp ./support/setup-geoserver-geowave-workspace.sh master1:/data/setup-geoserver-geowave-workspace.sh
+docker exec -it master1 bash -c ". ~/.bashrc;cd /data;/data/setup-geoserver-geowave-workspace.sh"
