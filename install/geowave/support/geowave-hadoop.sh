@@ -1,1 +1,0 @@
-hadoop jar /data/geowave/deploy/target/geowave-deploy-0.9.0-tools.jar "$@"

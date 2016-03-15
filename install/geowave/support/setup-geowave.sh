@@ -1,3 +1,4 @@
 #!/bin/bash
-/data/geowave-install.sh
-/data/ingest-and-kde-gdelt.sh
+source geowave-env.sh
+${STAGING_DIR}/install-from-source.sh
+${STAGING_DIR}/ingest-and-kde-gdelt.sh

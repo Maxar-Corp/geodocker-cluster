@@ -1,5 +1,4 @@
 #!/bin/bash
-echo "Setting up GeoWave workspace in GeoServer..."
 source geowave-env.sh
 $GEOSERVER_HOME/bin/shutdown.sh
 mkdir ${GEOSERVER_DATA_DIR}/workspaces/geowave
